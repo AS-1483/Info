@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <style>
+        body { background: #0f0c29; color: white; font-family: 'Poppins', sans-serif; text-align: center; padding: 20px; }
+        .container { background: rgba(255,255,255,0.05); padding: 30px 20px; border-radius: 30px; border: 1px solid #ff0050; max-width: 400px; margin: auto; }
+        input { width: 100%; padding: 12px; border-radius: 8px; border: none; margin-bottom: 10px; }
+        button { width: 100%; padding: 12px; border-radius: 8px; border: none; background: #ff0050; color: white; cursor: pointer; margin-top: 5px; }
+        #qrcode { background: white; padding: 10px; width: fit-content; margin: 20px auto; border-radius: 10px; display: none; }
+        .back { float: left; color: #ff0050; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <i class="fas fa-arrow-left back" onclick="location.href='list.html'"></i>
+        <h3>QR Master</h3>
+        <p style="font-size: 12px; opacity: 0.6; margin-bottom: 20px;">Generate QR Code</p>
+        
+        <input type="text" id="text" placeholder="Enter link or text">
+        <button onclick="generate()">GENERATE QR</button>
+        <div id="qrcode"></div>
+    </div>
+
+    <script>
+        function generate() {
+            let val = document.getElementById('text').value;
+            let box = document.getElementById('qrcode');
+            if(!val) return alert("Write something!");
+            box.innerHTML = "";
+            box.style.display = "block";
+            new QRCode(box, { text: val, width: 150, height: 150 });
+        }
+    </script>
+</body>
+</html>
