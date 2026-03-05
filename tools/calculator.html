@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Price Calculator</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { background: #0f0c29; color: white; font-family: 'Poppins', sans-serif; display: flex; justify-content: center; padding: 20px; min-height: 100vh; }
+        .container { background: #1a1a3a; padding: 30px; border-radius: 20px; border: 1px solid #00d2ff; width: 100%; max-width: 400px; text-align: center; }
+        input { width: 100%; padding: 15px; border-radius: 8px; border: 1px solid #3a7bd5; background: #0f0c29; color: white; margin: 10px 0; outline: none; box-sizing: border-box; }
+        .result-box { margin-top: 20px; padding: 20px; background: rgba(0, 210, 255, 0.1); border-radius: 10px; border: 1px dashed #00d2ff; }
+        .total-price { font-size: 28px; color: #00d2ff; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <i class="fas fa-arrow-left" style="float:left; cursor:pointer; color:#00d2ff;" onclick="location.href='list.html'"></i>
+        <h3>Price Calculator</h3>
+        
+        <input type="number" id="weight" placeholder="ওজন (কেজি/গ্রাম)" oninput="calculate()">
+        <input type="number" id="price" placeholder="প্রতি ইউনিটের দাম (টাকা)" oninput="calculate()">
+        
+        <div class="result-box">
+            <p>মোট টাকা:</p>
+            <div id="total" class="total-price">০.০০</div>
+        </div>
+    </div>
+
+    <script>
+        function calculate() {
+            const weight = document.getElementById('weight').value;
+            const price = document.getElementById('price').value;
+            const total = weight * price;
+            
+            if(weight && price) {
+                document.getElementById('total').innerText = total.toLocaleString() + " টাকা";
+            } else {
+                document.getElementById('total').innerText = "০.০০";
+            }
+        }
+    </script>
+</body>
+</html>
