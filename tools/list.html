@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { background: #0f0c29; color: white; font-family: 'Poppins', sans-serif; display: flex; flex-direction: column; align-items: center; min-height: 100vh; padding: 20px; }
+        .header { width: 100%; max-width: 400px; display: flex; align-items: center; margin-bottom: 40px; }
+        .back-btn { cursor: pointer; font-size: 24px; color: #00d2ff; transition: 0.3s; }
+        .back-btn:hover { transform: scale(1.2); }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; width: 100%; max-width: 400px; }
+        .tool-card { background: rgba(255,255,255,0.05); padding: 30px 10px; border-radius: 20px; text-align: center; cursor: pointer; border: 1px solid rgba(255,255,255,0.1); transition: 0.3s; }
+        .tool-card:hover { background: #00d2ff; color: #000; border-color: #fff; transform: translateY(-5px); }
+        .tool-card i { font-size: 40px; margin-bottom: 15px; display: block; }
+        h2 { margin-left: 20px; font-weight: 300; letter-spacing: 1px; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <i class="fas fa-arrow-left back-btn" onclick="window.parent.postMessage('closeTools', '*')"></i>
+        <h2>MY TOOLS</h2>
+    </div>
+
+    <div class="grid">
+        <div class="tool-card" onclick="location.href='age.html'">
+            <i class="fas fa-birthday-cake"></i>
+            <span>Age Calculator</span>
+        </div>
+        <div class="tool-card" onclick="location.href='qr.html'">
+            <i class="fas fa-qrcode"></i>
+            <span>QR Master</span>
+        </div>
+    </div>
+</body>
+</html>
