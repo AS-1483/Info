@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { background: #0f0c29; color: white; font-family: 'Poppins', sans-serif; text-align: center; padding: 20px; }
+        .container { background: rgba(255,255,255,0.05); padding: 40px 20px; border-radius: 30px; border: 1px solid #00d2ff; max-width: 400px; margin: auto; }
+        input { width: 100%; padding: 15px; border-radius: 10px; border: none; margin: 20px 0; font-size: 16px; }
+        button { width: 100%; padding: 15px; border-radius: 10px; border: none; background: #00d2ff; font-weight: bold; cursor: pointer; }
+        #result { margin-top: 25px; font-size: 20px; color: #00d2ff; }
+        .back { float: left; color: #00d2ff; cursor: pointer; margin-bottom: 20px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <i class="fas fa-arrow-left back" onclick="location.href='list.html'"></i>
+        <h3 style="margin-bottom: 20px;">Age Calculator</h3>
+        <input type="date" id="dob">
+        <button onclick="calculate()">CALCULATE</button>
+        <div id="result"></div>
+    </div>
+
+    <script>
+        function calculate() {
+            let birth = new Date(document.getElementById('dob').value);
+            if(isNaN(birth)) return alert("Select Date");
+            let now = new Date();
+            let age = now.getFullYear() - birth.getFullYear();
+            let m = now.getMonth() - birth.getMonth();
+            if (m < 0 || (m === 0 && now.getDate() < birth.getDate())) age--;
+            document.getElementById('result').innerHTML = "Your Age: <br><b>" + age + " Years</b>";
+        }
+    </script>
+</body>
+</html>
