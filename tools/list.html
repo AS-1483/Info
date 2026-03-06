@@ -3,47 +3,87 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Tools | Elite UI</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body { background: #0f0c29; color: white; font-family: 'Poppins', sans-serif; display: flex; flex-direction: column; align-items: center; min-height: 100vh; padding: 20px; }
-        .header { width: 100%; max-width: 400px; display: flex; align-items: center; margin-bottom: 40px; }
-        .back-btn { cursor: pointer; font-size: 24px; color: #00d2ff; transition: 0.3s; }
-        .back-btn:hover { transform: scale(1.2); }
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; width: 100%; max-width: 400px; }
-        .tool-card { background: rgba(255,255,255,0.05); padding: 30px 10px; border-radius: 20px; text-align: center; cursor: pointer; border: 1px solid rgba(255,255,255,0.1); transition: 0.3s; }
-        .tool-card:hover { background: #00d2ff; color: #000; border-color: #fff; transform: translateY(-5px); }
-        .tool-card i { font-size: 40px; margin-bottom: 15px; display: block; }
-        h2 { margin-left: 20px; font-weight: 300; letter-spacing: 1px; }
+        :root { --primary: #00d2ff; --bg: #0f0c29; }
+        * { box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        
+        body { 
+            background: var(--bg); 
+            color: white; margin: 0; min-height: 100vh;
+            display: flex; flex-direction: column; align-items: center;
+            overflow-x: hidden; position: relative;
+        }
+
+        /* সিগনেচার থিম অনুযায়ী গ্লোয়িং পার্টিকেল এনিমেশন */
+        #particle-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; }
+        .particle {
+            position: absolute; border-radius: 50%;
+            background: var(--primary);
+            box-shadow: 0 0 10px var(--primary);
+            animation: move linear infinite;
+        }
+        @keyframes move {
+            0% { transform: translateY(110vh) scale(0); opacity: 0; }
+            50% { opacity: 0.3; }
+            100% { transform: translateY(-20vh) scale(1); opacity: 0; }
+        }
+
+        .header { width: 90%; max-width: 900px; padding: 40px 0; display: flex; align-items: center; z-index: 1; }
+        .back-btn { cursor: pointer; font-size: 28px; color: var(--primary); }
+        h2 { margin-left: 20px; font-weight: 300; letter-spacing: 3px; color: #fff; }
+
+        .grid { 
+            display: grid; width: 90%; max-width: 900px; gap: 20px; z-index: 1;
+            grid-template-columns: repeat(3, 1fr); 
+        }
+        @media (min-width: 1024px) { .grid { grid-template-columns: repeat(4, 1fr); } }
+
+        .tool-card { 
+            background: rgba(255, 255, 255, 0.05); 
+            padding: 30px 15px; border-radius: 20px; 
+            text-align: center; cursor: pointer; 
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: 0.4s ease;
+        }
+        .tool-card:hover { 
+            background: var(--primary); color: #000;
+            transform: translateY(-8px);
+        }
+        .tool-card i { font-size: 30px; margin-bottom: 12px; display: block; }
+        .tool-card span { font-weight: 500; font-size: 14px; }
     </style>
 </head>
 <body>
+
+    <div id="particle-canvas"></div>
+
     <div class="header">
         <i class="fas fa-arrow-left back-btn" onclick="window.parent.postMessage('closeTools', '*')"></i>
         <h2>MY TOOLS</h2>
     </div>
 
     <div class="grid">
-        <div class="tool-card" onclick="location.href='age.html'">
-            <i class="fas fa-birthday-cake"></i>
-            <span>Age Calculator</span>
-        </div>
-        <div class="tool-card" onclick="location.href='qr.html'">
-            <i class="fas fa-qrcode"></i>
-            <span>QR Master</span>
-        </div>
-        <div class="tool-card" onclick="location.href='speedtest.html'">
-            <i class="fas fa-tachometer-alt"></i>
-            <span>Speed Test</span>
-        </div>
-<div class="tool-card" onclick="location.href='base64.html'">
-    <i class="fas fa-lock"></i>
-    <span>Base64 Tool</span>
+        <div class="tool-card" onclick="location.href='age.html'"><i class="fas fa-birthday-cake"></i><span>Age Calculator </span></div>
+        <div class="tool-card" onclick="location.href='qr.html'"><i class="fas fa-qrcode"></i><span>QR Master</span></div>
+        <div class="tool-card" onclick="location.href='speedtest.html'"><i class="fas fa-tachometer-alt"></i><span>Speed Test</span></div>
+        <div class="tool-card" onclick="location.href='base64.html'"><i class="fas fa-lock"></i><span>Base64</span></div>
+        <div class="tool-card" onclick="location.href='calculator.html'"><i class="fas fa-calculator"></i><span>Price Calculator </span></div>
     </div>
-<div class="tool-card" onclick="location.href='calculator.html'">
-    <i class="fas fa-calculator"></i>
-    <span>Price Calculator</span>
-</div>
 
-    </div>
+    <script>
+        const canvas = document.getElementById('particle-canvas');
+        for (let i = 0; i < 20; i++) {
+            const p = document.createElement('div');
+            p.className = 'particle';
+            const size = Math.random() * 6 + 2;
+            p.style.width = size + 'px'; p.style.height = size + 'px';
+            p.style.left = Math.random() * 100 + '%';
+            p.style.animationDuration = Math.random() * 10 + 10 + 's';
+            p.style.animationDelay = Math.random() * 10 + 's';
+            canvas.appendChild(p);
+        }
+    </script>
 </body>
 </html>
