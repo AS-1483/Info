@@ -3,41 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QR Master | Professional Tools</title>
+    <title>QR Master Pro</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-    <script src="https://unpkg.com/html5-qrcode"></script>
+    <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
     <style>
-        :root { --primary: #00d2ff; --glass: rgba(255, 255, 255, 0.05); }
-        body { background: #0f0c29; color: white; font-family: 'Poppins', sans-serif; display: flex; justify-content: center; padding: 20px; min-height: 100vh; }
+        :root { --primary: #00d2ff; --bg: #0f0c29; }
+        * { box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background: var(--bg); color: white; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 20px; }
         
-        /* থিম ম্যাচিং কন্টেইনার */
-        .container { 
-            background: #1a1a3a; padding: 30px; border-radius: 20px; 
-            border: 1px solid rgba(255,255,255,0.1); width: 100%; max-width: 400px; 
-            text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-        }
+        .container { background: #1a1a3a; padding: 25px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); width: 100%; max-width: 400px; text-align: center; }
+        .tabs { display: flex; gap: 8px; margin-bottom: 20px; background: rgba(0,0,0,0.3); padding: 5px; border-radius: 12px; }
+        .tab-btn { flex: 1; padding: 10px; border: none; background: transparent; color: white; border-radius: 8px; cursor: pointer; font-weight: bold; }
+        .tab-btn.active { background: var(--primary); color: #000; }
 
-        .back-btn { float: left; cursor: pointer; color: var(--primary); font-size: 20px; }
+        input { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.2); color: white; margin-bottom: 10px; text-align: center; }
+        .action-btn { width: 100%; padding: 12px; border-radius: 10px; border: none; background: var(--primary); color: #000; font-weight: bold; cursor: pointer; margin-top: 5px; }
         
-        .tabs { display: flex; gap: 10px; margin: 25px 0; }
-        .tab-btn { flex: 1; padding: 10px; background: var(--glass); border: 1px solid rgba(255,255,255,0.1); color: white; border-radius: 8px; cursor: pointer; }
-        .tab-btn.active { background: var(--primary); color: #000; font-weight: bold; }
-
-        input, .file-upload { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); background: #0f0c29; color: white; margin-bottom: 10px; }
-        .action-btn { width: 100%; padding: 12px; border-radius: 8px; border: none; background: var(--primary); color: #000; font-weight: bold; cursor: pointer; }
+        /* QR Container with Footer */
+        #qr-wrapper { background: white; padding: 15px; border-radius: 10px; width: fit-content; margin: 20px auto; display: none; }
+        #qrcode { width: 150px; height: 150px; }
+        .qr-footer { color: #000; font-size: 10px; font-weight: bold; margin-top: 5px; }
         
-        #qrcode { background: white; padding: 10px; width: fit-content; margin: 20px auto; border-radius: 10px; display: none; }
-        #reader { width: 100%; border-radius: 15px; margin-top: 15px; overflow: hidden; }
-        #scan-result { margin-top: 15px; color: var(--primary); word-break: break-all; }
+        #reader { width: 100%; border-radius: 15px; overflow: hidden; margin-top: 10px; }
+        .result-box { margin-top: 15px; padding: 15px; background: rgba(0, 210, 255, 0.1); border: 1px dashed var(--primary); border-radius: 10px; display: none; }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <i class="fas fa-arrow-left back-btn" onclick="location.href='list.html'"></i>
-        <h3>QR Master</h3>
-
+        <h3>QR Master Pro</h3>
         <div class="tabs">
             <button class="tab-btn active" id="gen-tab" onclick="switchMode('gen')">Generator</button>
             <button class="tab-btn" id="scan-tab" onclick="switchMode('scan')">Scanner</button>
@@ -46,18 +41,29 @@
         <div id="gen-view">
             <input type="text" id="text-input" placeholder="Enter link or text">
             <button class="action-btn" onclick="generateQR()">GENERATE</button>
-            <div id="qrcode"></div>
+            <div id="qr-wrapper">
+                <div id="qrcode"></div>
+                <div class="qr-footer">©️ AS QR Generator</div>
+            </div>
+            <button id="save-btn" class="action-btn" style="display:none; background:#28a745; color:white;" onclick="saveQR()">SAVE</button>
         </div>
 
         <div id="scan-view" style="display: none;">
             <div id="reader"></div>
-            <p style="margin: 15px 0;">অথবা গ্যালারি থেকে আপলোড করুন:</p>
-            <input type="file" id="qr-file" accept="image/*" class="file-upload">
-            <div id="scan-result"></div>
+            <button class="action-btn" onclick="startScanning()">START CAMERA</button>
+            <input type="file" id="qr-file" class="action-btn" style="background:#444; color:white;" accept="image/*">
+            <div id="result-box" class="result-box">
+                <p id="scan-result" style="word-break: break-all;"></p>
+                <div style="display: flex; gap: 5px; margin-top: 10px;">
+                    <button class="action-btn" onclick="copyResult()">COPY</button>
+                    <a id="open-link" href="#" target="_blank" class="action-btn" style="text-decoration:none; display:inline-block; padding: 12px;">OPEN</a>
+                </div>
+            </div>
         </div>
     </div>
 
     <script>
+        let counter = 0;
         const html5QrCode = new Html5Qrcode("reader");
 
         function switchMode(mode) {
@@ -65,32 +71,55 @@
             document.getElementById('scan-view').style.display = (mode === 'scan') ? 'block' : 'none';
             document.getElementById('gen-tab').classList.toggle('active', mode === 'gen');
             document.getElementById('scan-tab').classList.toggle('active', mode === 'scan');
-            if(mode === 'scan') startCamera(); else stopCamera();
         }
 
-        // Generator
         function generateQR() {
             let val = document.getElementById('text-input').value;
-            let box = document.getElementById('qrcode');
-            if(!val) return alert("কিছু লিখুন!");
-            box.innerHTML = ""; box.style.display = "block";
-            new QRCode(box, { text: val, width: 160, height: 160 });
+            if(!val) return alert("Please enter text");
+            document.getElementById('qrcode').innerHTML = "";
+            new QRCode(document.getElementById('qrcode'), {text: val, width: 150, height: 150});
+            document.getElementById('qr-wrapper').style.display = "block";
+            document.getElementById('save-btn').style.display = "block";
         }
 
-        // Live Scanner
-        function startCamera() {
+        // HTML2Canvas ব্যবহার করা ভালো তবে সহজ করার জন্য আমরা সরাসরি ক্যানভাস থেকে নিচ্ছি
+        function saveQR() {
+            const canvas = document.querySelector("#qrcode canvas");
+            // Footer সহ সেভ করার জন্য একটি বড় ক্যানভাস তৈরি
+            const fullCanvas = document.createElement('canvas');
+            fullCanvas.width = 170; fullCanvas.height = 185;
+            const ctx = fullCanvas.getContext('2d');
+            ctx.fillStyle = "white"; ctx.fillRect(0,0,170,185);
+            ctx.drawImage(canvas, 10, 10);
+            ctx.fillStyle = "black"; ctx.font = "bold 10px Arial";
+            ctx.fillText("©️ AS QR Generator", 35, 175);
+            
+            const link = document.createElement('a');
+            link.download = `as_qr_genaretor_${counter++}.png`;
+            link.href = fullCanvas.toDataURL("image/png");
+            link.click();
+        }
+
+        function startScanning() {
             html5QrCode.start({ facingMode: "environment" }, { fps: 10, qrbox: 200 }, 
-            (text) => { document.getElementById('scan-result').innerHTML = `Result: <a href="${text}" style="color:white" target="_blank">${text}</a>`; });
+                (text) => { displayResult(text); html5QrCode.stop(); }
+            );
         }
 
-        function stopCamera() { html5QrCode.stop().catch(err => {}); }
-
-        // File Upload Scanner
         document.getElementById('qr-file').addEventListener('change', e => {
-            html5QrCode.scanFile(e.target.files[0], true)
-            .then(text => { document.getElementById('scan-result').innerHTML = `Result: <a href="${text}" style="color:white" target="_blank">${text}</a>`; })
-            .catch(err => alert("কোড পাওয়া যায়নি!"));
+            html5QrCode.scanFile(e.target.files[0], true).then(text => displayResult(text));
         });
+
+        function displayResult(text) {
+            document.getElementById('scan-result').innerText = text;
+            document.getElementById('open-link').href = text.startsWith('http') ? text : '#';
+            document.getElementById('result-box').style.display = "block";
+        }
+
+        function copyResult() {
+            navigator.clipboard.writeText(document.getElementById('scan-result').innerText);
+            alert("Copied!");
+        }
     </script>
 </body>
 </html>
