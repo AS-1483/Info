@@ -3,41 +3,97 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Price Calculator</title>
+    <title>Smart Price Calculator</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body { background: #0f0c29; color: white; font-family: 'Poppins', sans-serif; display: flex; justify-content: center; padding: 20px; min-height: 100vh; }
-        .container { background: #1a1a3a; padding: 30px; border-radius: 20px; border: 1px solid #00d2ff; width: 100%; max-width: 400px; text-align: center; }
-        input { width: 100%; padding: 15px; border-radius: 8px; border: 1px solid #3a7bd5; background: #0f0c29; color: white; margin: 10px 0; outline: none; box-sizing: border-box; }
-        .result-box { margin-top: 20px; padding: 20px; background: rgba(0, 210, 255, 0.1); border-radius: 10px; border: 1px dashed #00d2ff; }
-        .total-price { font-size: 28px; color: #00d2ff; font-weight: bold; }
+        :root { --primary: #00d2ff; --bg: #0f0c29; }
+        * { box-sizing: border-box; font-family: 'Poppins', sans-serif; transition: 0.3s ease; }
+        
+        body { background: var(--bg); color: white; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 20px; }
+        
+        .container { 
+            background: #1a1a3a; padding: 25px; border-radius: 20px; 
+            border: 1px solid rgba(255,255,255,0.1); width: 100%; max-width: 400px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5); backdrop-filter: blur(15px);
+            text-align: center; position: relative;
+        }
+        
+        .back-btn { position: absolute; top: 20px; left: 20px; cursor: pointer; color: var(--primary); font-size: 20px; }
+        
+        /* সুইচ বাটন */
+        .switch-container { margin-bottom: 20px; padding: 5px; background: rgba(0,0,0,0.3); border-radius: 10px; display: flex; }
+        .switch-btn { flex: 1; padding: 10px; border-radius: 8px; cursor: pointer; font-size: 13px; font-weight: bold; }
+        .active-mode { background: var(--primary); color: #000; }
+        
+        .calc-mode { display: none; }
+        .active-calc { display: block; }
+        
+        input { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.2); color: white; margin-bottom: 10px; outline: none; text-align: center; }
+        
+        /* হাইলাইট রেজাল্ট বক্স */
+        .result-highlight { margin-top: 15px; padding: 15px; background: rgba(0, 210, 255, 0.1); border: 1px dashed var(--primary); border-radius: 12px; }
+        .result-text { font-size: 14px; opacity: 0.8; }
+        .final-val { font-size: 20px; color: var(--primary); font-weight: bold; display: block; margin-top: 5px; }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <i class="fas fa-arrow-left" style="float:left; cursor:pointer; color:#00d2ff;" onclick="location.href='list.html'"></i>
+        <i class="fas fa-arrow-left back-btn" onclick="window.parent.postMessage('closeTools', '*')"></i>
         <h3>Price Calculator</h3>
         
-        <input type="number" id="weight" placeholder="ওজন (কেজি/গ্রাম)" oninput="calculate()">
-        <input type="number" id="price" placeholder="প্রতি ইউনিটের দাম (টাকা)" oninput="calculate()">
-        
-        <div class="result-box">
-            <p>মোট টাকা:</p>
-            <div id="total" class="total-price">০.০০</div>
+        <div class="switch-container">
+            <div id="btn1" class="switch-btn active-mode" onclick="toggleMode(1)">Price</div>
+            <div id="btn2" class="switch-btn" onclick="toggleMode(2)">Weight</div>
+        </div>
+
+        <div id="mode1" class="calc-mode active-calc">
+            <input type="number" id="weight" placeholder="ওজন (কেজি)" oninput="calcPrice()">
+            <input type="number" id="rate1" placeholder="দর (প্রতি কেজি)" oninput="calcPrice()">
+            <div class="result-highlight">
+                <span class="result-text">মোট দাম:</span>
+                <span id="totalPrice" class="final-val">০.০০ টাকা</span>
+            </div>
+        </div>
+
+        <div id="mode2" class="calc-mode">
+            <input type="number" id="budget" placeholder="টাকা (বাজেট)" oninput="calcWeight()">
+            <input type="number" id="rate2" placeholder="পণ্যের দর (প্রতি কেজি)" oninput="calcWeight()">
+            <div class="result-highlight">
+                <span class="result-text">পণ্য পাবেন:</span>
+                <span id="totalWeight" class="final-val">০.০০০ কেজি</span>
+            </div>
         </div>
     </div>
 
     <script>
-        function calculate() {
-            const weight = document.getElementById('weight').value;
-            const price = document.getElementById('price').value;
-            const total = weight * price;
-            
-            if(weight && price) {
-                document.getElementById('total').innerText = total.toLocaleString() + " টাকা";
+        function toggleMode(mode) {
+            document.getElementById('mode1').style.display = (mode === 1) ? 'block' : 'none';
+            document.getElementById('mode2').style.display = (mode === 2) ? 'block' : 'none';
+            document.getElementById('btn1').className = (mode === 1) ? 'switch-btn active-mode' : 'switch-btn';
+            document.getElementById('btn2').className = (mode === 2) ? 'switch-btn active-mode' : 'switch-btn';
+        }
+
+        function calcPrice() {
+            const w = document.getElementById('weight').value;
+            const r = document.getElementById('rate1').value;
+            const total = w * r;
+            document.getElementById('totalPrice').innerText = total > 0 ? total.toLocaleString() + " টাকা" : "০.০০ টাকা";
+        }
+
+        function calcWeight() {
+            const b = document.getElementById('budget').value;
+            const r = document.getElementById('rate2').value;
+            // ১ কেজির কম হলে গ্রাম হিসেবে দেখাবে, অন্যথায় কেজি
+            if (r > 0) {
+                const res = b / r;
+                if(res < 1) {
+                    document.getElementById('totalWeight').innerText = (res * 1000).toFixed(0) + " গ্রাম";
+                } else {
+                    document.getElementById('totalWeight').innerText = res.toFixed(3) + " কেজি";
+                }
             } else {
-                document.getElementById('total').innerText = "০.০০";
+                document.getElementById('totalWeight').innerText = "০.০০০ কেজি";
             }
         }
     </script>
