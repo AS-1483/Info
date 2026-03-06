@@ -3,31 +3,54 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Professional Speed Test</title>
+    <title>Speed Test Pro</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body { background: #0f0c29; color: white; font-family: 'Poppins', sans-serif; display: flex; justify-content: center; padding: 20px; min-height: 100vh; margin: 0; }
+        :root { --primary: #00d2ff; --bg: #0f0c29; }
+        * { box-sizing: border-box; font-family: 'Poppins', sans-serif; transition: 0.3s; }
+        body { background: var(--bg); color: white; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 20px; }
+        
         .container { 
-            background: #1a1a3a; padding: 30px; border-radius: 20px; 
-            border: 1px solid rgba(255,255,255,0.1); width: 100%; max-width: 400px; 
-            text-align: center;
+            background: #1a1a3a; padding: 25px; border-radius: 20px; 
+            border: 1px solid rgba(255,255,255,0.1); width: 100%; max-width: 400px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5); text-align: center; position: relative;
         }
-        .back-btn { float: left; cursor: pointer; color: #00d2ff; font-size: 20px; }
-        .iframe-container { width: 100%; height: 350px; margin-top: 20px; border-radius: 15px; overflow: hidden; border: 2px solid #00d2ff; }
+        
+        .back-btn { position: absolute; top: 20px; left: 20px; cursor: pointer; color: var(--primary); font-size: 20px; }
+        h3 { margin: 10px 0 20px 0; font-size: 18px; color: var(--primary); }
+        
+        /* Iframe Container */
+        .iframe-box { width: 100%; height: 320px; border-radius: 15px; overflow: hidden; border: 1px solid var(--primary); background: #fff; }
         iframe { width: 100%; height: 100%; border: none; }
+        
+        /* Try Again Button */
+        .action-btn { width: 100%; padding: 12px; border-radius: 10px; border: none; background: var(--primary); color: #000; font-weight: bold; cursor: pointer; margin-top: 15px; }
+        .action-btn:active { transform: scale(0.97); }
+        
+        .footer-text { margin-top: 15px; font-size: 11px; opacity: 0.6; }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <i class="fas fa-arrow-left back-btn" onclick="location.href='list.html'"></i>
+        <i class="fas fa-arrow-left back-btn" onclick="window.parent.postMessage('closeTools', '*')"></i>
         <h3>Speed Test</h3>
         
-        <div class="iframe-container">
-            <iframe src="https://fast.com/" title="Speed Test"></iframe>
+        <div class="iframe-box">
+            <iframe id="speed-frame" src="https://fast.com/" title="Speed Test"></iframe>
         </div>
-        <p style="margin-top: 15px; font-size: 12px; opacity: 0.7;">পাওয়ার্ড বাই Netflix</p>
+        
+        <button class="action-btn" onclick="reloadSpeedTest()">TRY AGAIN</button>
+        
+        <div class="footer-text">Powered by Netflix</div>
     </div>
 
+    <script>
+        function reloadSpeedTest() {
+            const iframe = document.getElementById('speed-frame');
+            // রিলোড করার জন্য সোর্সটি পুনরায় সেট করা হচ্ছে
+            iframe.src = iframe.src;
+        }
+    </script>
 </body>
 </html>
