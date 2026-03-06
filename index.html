@@ -52,13 +52,40 @@
         .profile-container img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 2px solid #1a1a3a; }
 
         .social-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-top: 30px; }
-        .social-btn { background: var(--glass); padding: 15px 5px; border-radius: 12px; text-decoration: none; color: white; border: 1px solid rgba(255,255,255,0.1); transition: 0.3s; font-size: 11px; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 90px; }
+        
+        /* Pro-Button Styling */
+        .social-btn { 
+            background: var(--glass); padding: 15px 5px; border-radius: 15px; 
+            text-decoration: none; color: white; border: 1px solid rgba(255,255,255,0.1); 
+            transition: all 0.3s ease; 
+            font-size: 11px; display: flex; flex-direction: column; align-items: center; 
+            justify-content: center; min-height: 90px; backdrop-filter: blur(5px);
+        }
         .social-btn i { font-size: 26px; margin-bottom: 8px; }
         .social-btn img { width: 32px; margin-bottom: 8px; }
-        .social-btn:hover { background: rgba(255,255,255,0.1); transform: translateY(-8px); border-color: var(--primary); }
+        
+        .social-btn:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.3); }
+        
+        /* Professional Active/Click State */
+        .social-btn:active {
+            transform: translateY(-8px) scale(0.97);
+            border-color: var(--primary);
+            box-shadow: 0 8px 15px rgba(0, 210, 255, 0.3);
+            transition: transform 0.2s cubic-bezier(0.2, 0, 0, 1), box-shadow 0.2s ease;
+        }
 
-        .tools-box-trigger { margin-top: 25px; width: 100%; max-width: 450px; background: var(--glass); padding: 18px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; gap: 12px; cursor: pointer; transition: 0.3s; }
-        .tools-box-trigger:hover { background: var(--primary); color: #000; font-weight: bold; }
+        .tools-box-trigger { 
+            margin-top: 25px; width: 100%; max-width: 450px; background: var(--glass); 
+            padding: 18px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.1); 
+            display: flex; align-items: center; justify-content: center; gap: 12px; 
+            cursor: pointer; transition: all 0.3s ease; 
+        }
+        .tools-box-trigger:active {
+            transform: translateY(-5px) scale(0.99);
+            background: var(--primary); color: #000;
+            box-shadow: 0 5px 10px rgba(0, 210, 255, 0.4);
+            transition: transform 0.2s cubic-bezier(0.2, 0, 0, 1), background 0.3s ease;
+        }
 
         .footer-info { margin-top: 50px; text-align: center; font-size: 13px; color: rgba(255,255,255,0.5); }
         .float-anim { animation: floating 3s ease-in-out infinite; }
@@ -87,10 +114,9 @@
                     <a href="https://youtube.com/@sa_shuvo1483?si=RmuHERoBaRXpAiI_" class="social-btn"><i class="fab fa-youtube" style="color:#FF0000"></i>YouTube</a>
                     <a href="https://vm.tiktok.com/ZS9dMP8LweUCk-nhAgV/" class="social-btn"><i class="fab fa-tiktok" style="color:#ffffff"></i>TikTok</a>
                     <a href="mailto:abdullahislamshuvo1483@gmail.com?subject=Contact%20from%20Digital%20Card" class="social-btn">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/7/7e/Gmail_icon_%282020%29.svg" alt="Gmail">
-    <span>Gmail</span>
-</a>
-
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/7/7e/Gmail_icon_%282020%29.svg" alt="Gmail">
+                        <span>Gmail</span>
+                    </a>
                </div>
             </div>
         </div>
@@ -109,7 +135,6 @@
     <iframe id="tools-view"></iframe>
 
     <script>
-        // Bubble Generator
         const container = document.getElementById('bubble-container');
         for (let i = 0; i < 15; i++) {
             const bubble = document.createElement('div');
