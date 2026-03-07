@@ -3,51 +3,53 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Age Calculator</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root { --primary: #00d2ff; --bg: #0f0c29; }
-        * { box-sizing: border-box; font-family: 'Poppins', sans-serif; transition: 0.3s ease; }
+        * { box-sizing: border-box; font-family: 'Poppins', sans-serif; }
         
         body { background: var(--bg); color: white; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 20px; }
         
-        .container { background: rgba(255, 255, 255, 0.05); padding: 40px 30px; border-radius: 30px; border: 1px solid rgba(255, 255, 255, 0.1); max-width: 400px; width: 100%; backdrop-filter: blur(20px); text-align: center; }
+        .container { background: rgba(255, 255, 255, 0.05); padding: 30px; border-radius: 30px; border: 1px solid rgba(255, 255, 255, 0.1); max-width: 400px; width: 100%; backdrop-filter: blur(20px); text-align: center; position: relative; }
         
-        input { width: 100%; padding: 18px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.05); color: white; margin: 20px 0; font-size: 16px; outline: none; text-align: center; }
+        /* Back Button Style */
+        .back-btn { position: absolute; top: 20px; left: 20px; font-size: 20px; color: white; cursor: pointer; transition: 0.3s; }
+        .back-btn:hover { color: var(--primary); transform: translateX(-5px); }
         
+        h3 { margin: 10px 0 25px 0; }
+        input { width: 100%; padding: 18px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.05); color: white; margin-bottom: 20px; text-align: center; font-size: 16px; outline: none; }
         button { width: 100%; padding: 18px; border-radius: 15px; border: none; background: linear-gradient(45deg, var(--primary), #3a7bd5); color: white; font-weight: bold; cursor: pointer; text-transform: uppercase; }
-        button:active { transform: translateY(-5px) scale(0.97); box-shadow: 0 10px 20px rgba(0, 210, 255, 0.4); }
-
-        /* Modal Styles */
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); backdrop-filter: blur(5px); justify-content: center; align-items: center; z-index: 100; }
-        .modal-content { background: #1a1a3a; padding: 30px; border-radius: 20px; text-align: center; border: 1px solid var(--primary); max-width: 300px; }
-        .modal button { margin-top: 20px; background: var(--primary); color: black; }
+        
+        #result { margin-top: 25px; font-size: 1.1rem; }
+        #result b { color: var(--primary); display: block; font-size: 1.4rem; margin-top: 5px; }
     </style>
 </head>
 <body>
 
     <div class="container">
+        <div class="back-btn" onclick="goBack()">
+            <i class="fas fa-arrow-left"></i>
+        </div>
+
         <h3>Age Calculator</h3>
         <input type="date" id="dob">
         <button onclick="calculate()">CALCULATE</button>
-        <div id="result" style="margin-top:20px; color:var(--primary)"></div>
-    </div>
-
-    <div id="errorModal" class="modal">
-        <div class="modal-content">
-            <i class="fas fa-exclamation-circle" style="font-size: 40px; color: #ff0050;"></i>
-            <p id="errorMsg" style="margin: 20px 0;"></p>
-            <button onclick="closeModal()">Try Again</button>
-        </div>
+        <div id="result"></div>
     </div>
 
     <script>
+        // ব্যাক অ্যারো ফাংশন
+        function goBack() {
+            window.parent.postMessage('closeTools', '*');
+        }
+
         function calculate() {
             let dobValue = document.getElementById('dob').value;
-            let errorMsg = document.getElementById('errorMsg');
+            let resultDiv = document.getElementById('result');
             
-            // ভ্যালিডেশন লজিক
             if (!dobValue) {
-                showError("Please Enter your Birthday!");
+                alert("আপনার জন্ম তারিখ নির্বাচন করুন!");
                 return;
             }
 
@@ -55,28 +57,25 @@
             let now = new Date();
 
             if (birth > now) {
-                showError("Please enter your real birthday!");
+                alert("ভুল তারিখ!");
                 return;
             }
 
-            // ক্যালকুলেশন
-            let years = now.getFullYear() - birth.getFullYear();
-            let months = now.getMonth() - birth.getMonth();
-            let days = now.getDate() - birth.getDate();
+            let yDiff = now.getFullYear() - birth.getFullYear();
+            let mDiff = now.getMonth() - birth.getMonth();
+            let dDiff = now.getDate() - birth.getDate();
 
-            if (days < 0) { months--; days += 30; }
-            if (months < 0) { years--; months += 12; }
+            if (dDiff < 0) {
+                mDiff--;
+                let prevMonth = new Date(now.getFullYear(), now.getMonth(), 0);
+                dDiff += prevMonth.getDate();
+            }
+            if (mDiff < 0) {
+                yDiff--;
+                mDiff += 12;
+            }
 
-            document.getElementById('result').innerHTML = "Your Age: <br><b>" + years + "  Year " + months + " Months " + days + " Day </b>";
-        }
-
-        function showError(msg) {
-            document.getElementById('errorMsg').innerText = msg;
-            document.getElementById('errorModal').style.display = 'flex';
-        }
-
-        function closeModal() {
-            document.getElementById('errorModal').style.display = 'none';
+            resultDiv.innerHTML = "আপনার বয়স: <br><b>" + yDiff + " বছর " + mDiff + " মাস " + dDiff + " দিন </b>";
         }
     </script>
 </body>
