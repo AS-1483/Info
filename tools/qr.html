@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QR Master </title>
+    <title>QR Master</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
@@ -15,18 +15,16 @@
         .container { background: #1a1a3a; padding: 25px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); width: 100%; max-width: 400px; text-align: center; position: relative; }
         .back-btn { position: absolute; top: 20px; left: 20px; cursor: pointer; color: var(--primary); font-size: 20px; }
         
-        /* Fixed Size Modal */
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); justify-content: center; align-items: center; z-index: 1000; }
-        .modal-content { background: #1a1a3a; padding: 30px; border-radius: 20px; text-align: center; border: 1px solid var(--primary); width: 280px; height: 220px; display: flex; flex-direction: column; justify-content: center; align-items: center; }
-        
         .action-btn { width: 100%; padding: 12px; border-radius: 10px; border: none; background: var(--primary); color: #000; font-weight: bold; cursor: pointer; margin-top: 15px; }
-        
         .tabs { display: flex; gap: 8px; margin: 30px 0 20px; background: rgba(0,0,0,0.3); padding: 5px; border-radius: 12px; }
         .tab-btn { flex: 1; padding: 10px; border: none; background: transparent; color: white; border-radius: 8px; cursor: pointer; font-weight: bold; }
         .tab-btn.active { background: var(--primary); color: #000; }
         
         input { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.2); color: white; margin-bottom: 10px; text-align: center; }
+        
         #qr-wrapper { background: white; padding: 15px; border-radius: 10px; width: fit-content; margin: 20px auto; display: none; }
+        /* স্ক্রিনে ছোট দেখাবে */
+        #qrcode { width: 150px; height: 150px; }
         .qr-footer { color: #000; font-size: 10px; font-weight: bold; margin-top: 5px; }
         .result-box { margin-top: 15px; padding: 15px; background: rgba(0, 210, 255, 0.1); border: 1px dashed var(--primary); border-radius: 10px; display: none; }
     </style>
@@ -35,7 +33,7 @@
 
     <div class="container">
         <i class="fas fa-arrow-left back-btn" onclick="window.parent.postMessage('closeTools', '*')"></i>
-        <h3>QR Master </h3>
+        <h3>QR Master</h3>
         
         <div class="tabs">
             <button class="tab-btn active" id="gen-tab" onclick="switchMode('gen')">Generator</button>
@@ -59,64 +57,59 @@
             <div id="result-box" class="result-box">
                 <p id="scan-result" style="word-break: break-all;"></p>
                 <div style="display: flex; gap: 5px;">
-                    <button class="action-btn" onclick="copyResult()">COPY</button>
+                    <button class="action-btn" id="copy-btn" onclick="copyResult()">COPY</button>
                     <a id="open-link" href="#" target="_blank" class="action-btn" style="text-decoration:none; display:inline-block; padding:12px;">OPEN</a>
                 </div>
             </div>
         </div>
     </div>
 
-    <div id="modal" class="modal">
-        <div class="modal-content">
-            <i id="modal-icon" class="fas" style="font-size: 50px;"></i>
-            <p id="modal-text" style="margin: 20px 0; font-weight: bold;"></p>
-            <button class="action-btn" style="width: 100px;" onclick="document.getElementById('modal').style.display='none'">OK</button>
-        </div>
-    </div>
-
     <script>
         const html5QrCode = new Html5Qrcode("reader");
-
-        function showModal(text, isSuccess) {
-            document.getElementById('modal-text').innerText = text;
-            document.getElementById('modal-icon').className = isSuccess ? "fas fa-check-circle" : "fas fa-times-circle";
-            document.getElementById('modal-icon').style.color = isSuccess ? "#28a745" : "#ff0050";
-            document.getElementById('modal').style.display = "flex";
-        }
 
         function generateQR() {
             let val = document.getElementById('text-input').value;
             if(!val) return alert("Please enter text");
             document.getElementById('qrcode').innerHTML = "";
+            // UI তে ছোট সাইজ
             new QRCode(document.getElementById('qrcode'), {text: val, width: 150, height: 150});
             document.getElementById('qr-wrapper').style.display = "block";
             document.getElementById('save-btn').style.display = "block";
         }
 
         function saveQR() {
-            try {
-                const canvas = document.querySelector("#qrcode canvas");
+            const val = document.getElementById('text-input').value;
+            // HD আউটপুটের জন্য নতুন ক্যানভাস
+            const tempCanvas = document.createElement('canvas');
+            new QRCode(tempCanvas, {text: val, width: 1024, height: 1024, correctLevel: QRCode.CorrectLevel.H});
+            
+            setTimeout(() => {
                 const fullCanvas = document.createElement('canvas');
-                fullCanvas.width = 175; fullCanvas.height = 185;
+                fullCanvas.width = 1100; fullCanvas.height = 1150;
                 const ctx = fullCanvas.getContext('2d');
-                ctx.fillStyle = "white"; ctx.fillRect(0,0,175,185);
-                ctx.drawImage(canvas, 12, 10);
-                ctx.fillStyle = "black"; ctx.font = "bold 10px Arial";
-                ctx.fillText("©️ AS QR Generator", 40, 178);
+                ctx.fillStyle = "white"; ctx.fillRect(0,0,1100,1150);
+                ctx.drawImage(tempCanvas.querySelector('canvas'), 38, 30);
+                ctx.fillStyle = "black"; ctx.font = "bold 60px Arial";
+                ctx.fillText("©️ AS QR Generator", 280, 1100);
                 
                 const link = document.createElement('a');
-                link.download = `as_qr_generator_${Math.floor(Math.random()*1000)}.png`;
-                link.href = fullCanvas.toDataURL("image/png");
+                link.download = `AS_QR_HD_${Date.now()}.png`;
+                link.href = fullCanvas.toDataURL("image/png", 1.0);
                 link.click();
-                showModal("Successfully Downloaded!", true);
-            } catch(e) {
-                showModal("Download Failed!", false);
-            }
+            }, 500);
         }
 
         function copyResult() {
+            const btn = document.getElementById('copy-btn');
             navigator.clipboard.writeText(document.getElementById('scan-result').innerText);
-            showModal("Result Copied!", true);
+            
+            // ভিজ্যুয়াল ইফেক্ট
+            btn.innerText = "COPIED!";
+            btn.style.background = "#28a745";
+            setTimeout(() => {
+                btn.innerText = "COPY";
+                btn.style.background = "var(--primary)";
+            }, 1000);
         }
 
         function startScanning() {
@@ -124,7 +117,7 @@
         }
 
         document.getElementById('qr-file').addEventListener('change', e => {
-            html5QrCode.scanFile(e.target.files[0], true).then(text => displayResult(text)).catch(() => showModal("Scan Failed!", false));
+            html5QrCode.scanFile(e.target.files[0], true).then(text => displayResult(text)).catch(() => alert("Scan Failed!"));
         });
 
         function displayResult(text) {
