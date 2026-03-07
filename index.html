@@ -2,7 +2,7 @@
 <html lang="bn">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Abdullah Islam Shuvo | Digital Card</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -10,88 +10,73 @@
             --primary: #00d2ff;
             --secondary: #3a7bd5;
             --accent: #ff0050;
-            --glass: rgba(255, 255, 255, 0.05);
+            --bg: #0f0c29;
+            --glass: rgba(255, 255, 255, 0.08);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
 
         body {
-            background: #0f0c29;
+            background: var(--bg);
             display: flex; flex-direction: column; align-items: center;
-            min-height: 100vh; color: white; overflow: hidden;
+            min-height: 100vh; color: white; overflow-x: hidden;
             padding: 20px;
         }
 
         /* Bubble Animation */
-        .bubble-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; }
+        .bubble-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
         .bubble { position: absolute; bottom: -100px; background: rgba(255, 255, 255, 0.03); border-radius: 50%; animation: rise 10s infinite linear; }
-        @keyframes rise { 0% { transform: translateY(0) scale(1); opacity: 0; } 50% { opacity: 0.5; } 100% { transform: translateY(-110vh) scale(1.5); opacity: 0; } }
+        @keyframes rise { 0% { transform: translateY(0); opacity: 0; } 50% { opacity: 0.5; } 100% { transform: translateY(-110vh); opacity: 0; } }
 
-        #main-ui { position: relative; z-index: 2; width: 100%; display: flex; flex-direction: column; align-items: center; }
+        #main-ui { position: relative; z-index: 1; width: 100%; max-width: 450px; display: flex; flex-direction: column; align-items: center; }
 
-        /* Stable Border Card */
+        /* Card Styling */
         .card-wrapper {
-            position: relative; width: 100%; max-width: 450px; padding: 3px;
-            border-radius: 20px; overflow: hidden; margin-top: 50px; background: #1a1a3a;
+            position: relative; width: 100%; padding: 2px;
+            border-radius: 20px; overflow: hidden; margin-top: 50px;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            animation: floating 3s ease-in-out infinite;
         }
-        .card-wrapper::before, .card-wrapper::after {
-            content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
-            background: conic-gradient(transparent, transparent, transparent, var(--primary));
-            animation: rotateLine 4s linear infinite;
-        }
-        .card-wrapper::after { background: conic-gradient(transparent, transparent, transparent, var(--accent)); animation-delay: -2s; }
-        @keyframes rotateLine { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
         .main-card {
-            position: relative; width: 100%; background: #1a1a3a;
-            border-radius: 18px; padding: 40px 20px; text-align: center;
-            backdrop-filter: blur(25px); z-index: 2;
+            width: 100%; background: var(--bg);
+            border-radius: 18px; padding: 30px 20px; text-align: center;
+            backdrop-filter: blur(10px);
         }
 
         .profile-container { width: 110px; height: 110px; margin: 0 auto 20px; border-radius: 50%; padding: 3px; background: linear-gradient(45deg, var(--primary), var(--secondary)); }
-        .profile-container img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 2px solid #1a1a3a; }
+        .profile-container img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 2px solid var(--bg); }
 
         .social-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-top: 30px; }
         
-        /* Pro-Button Styling */
         .social-btn { 
             background: var(--glass); padding: 15px 5px; border-radius: 15px; 
             text-decoration: none; color: white; border: 1px solid rgba(255,255,255,0.1); 
-            transition: all 0.3s ease; 
-            font-size: 11px; display: flex; flex-direction: column; align-items: center; 
-            justify-content: center; min-height: 90px; backdrop-filter: blur(5px);
+            transition: all 0.3s ease; font-size: 11px; display: flex; flex-direction: column; align-items: center;
         }
         .social-btn i { font-size: 26px; margin-bottom: 8px; }
-        .social-btn img { width: 32px; margin-bottom: 8px; }
+        .social-btn img { width: 32px; height: 32px; margin-bottom: 8px; }
         
-        .social-btn:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.3); }
-        
-        /* Professional Active/Click State */
-        .social-btn:active {
-            transform: translateY(-8px) scale(0.97);
-            border-color: var(--primary);
-            box-shadow: 0 8px 15px rgba(0, 210, 255, 0.3);
-            transition: transform 0.2s cubic-bezier(0.2, 0, 0, 1), box-shadow 0.2s ease;
+        .social-btn:active { transform: translateY(-8px) scale(0.97); border-color: var(--primary); }
+
+        /* Tools Box Button with Pulse Animation */
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(0, 210, 255, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(0, 210, 255, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(0, 210, 255, 0); }
         }
 
         .tools-box-trigger { 
-            margin-top: 25px; width: 100%; max-width: 450px; background: var(--glass); 
-            padding: 18px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.1); 
+            margin-top: 30px; width: 100%; max-width: 450px; background: var(--primary); 
+            padding: 18px; border-radius: 15px; font-weight: bold; cursor: pointer;
             display: flex; align-items: center; justify-content: center; gap: 12px; 
-            cursor: pointer; transition: all 0.3s ease; 
+            animation: pulse 2s infinite; transition: transform 0.2s ease; color: #000;
         }
-        .tools-box-trigger:active {
-            transform: translateY(-5px) scale(0.99);
-            background: var(--primary); color: #000;
-            box-shadow: 0 5px 10px rgba(0, 210, 255, 0.4);
-            transition: transform 0.2s cubic-bezier(0.2, 0, 0, 1), background 0.3s ease;
-        }
+        .tools-box-trigger:active { transform: scale(0.97); background: #fff; }
 
-        .footer-info { margin-top: 50px; text-align: center; font-size: 13px; color: rgba(255,255,255,0.5); }
-        .float-anim { animation: floating 3s ease-in-out infinite; }
+        .footer-info { margin-top: 40px; text-align: center; font-size: 13px; color: rgba(255,255,255,0.5); }
         @keyframes floating { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
-
-        #tools-view { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #0f0c29; z-index: 1000; border: none; }
+        #tools-view { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1000; border: none; }
     </style>
 </head>
 <body>
@@ -99,7 +84,7 @@
     <div class="bubble-container" id="bubble-container"></div>
 
     <div id="main-ui">
-        <div class="card-wrapper float-anim">
+        <div class="card-wrapper">
             <div class="main-card">
                 <div class="profile-container">
                     <img src="Gemini_Generated_Image_4nyihv4nyihv4nyi.png" alt="Shuvo">
@@ -113,9 +98,9 @@
                     <a href="https://github.com/AS-1483" class="social-btn"><i class="fab fa-github" style="color:#ffffff"></i>GitHub</a>
                     <a href="https://youtube.com/@sa_shuvo1483?si=RmuHERoBaRXpAiI_" class="social-btn"><i class="fab fa-youtube" style="color:#FF0000"></i>YouTube</a>
                     <a href="https://vm.tiktok.com/ZS9dMP8LweUCk-nhAgV/" class="social-btn"><i class="fab fa-tiktok" style="color:#ffffff"></i>TikTok</a>
-                    <a href="mailto:abdullahislamshuvo1483@gmail.com?subject=Contact%20from%20Digital%20Card" class="social-btn">
+                    <a href="mailto:abdullahislamshuvo1483@gmail.com" class="social-btn">
                         <img src="https://upload.wikimedia.org/wikipedia/commons/7/7e/Gmail_icon_%282020%29.svg" alt="Gmail">
-                        <span>Gmail</span>
+                        Gmail
                     </a>
                </div>
             </div>
@@ -127,8 +112,7 @@
         </div>
 
         <div class="footer-info">
-            Developed by <b>Abdullah Islam Shuvo</b><br>
-            &copy; 2026 All Rights Reserved.
+            Developed by <b>Abdullah Islam Shuvo</b><br>&copy; 2026 All Rights Reserved.
         </div>
     </div>
 
@@ -143,7 +127,6 @@
             bubble.style.width = size; bubble.style.height = size;
             bubble.style.left = Math.random() * 100 + '%';
             bubble.style.animationDuration = (Math.random() * 5 + 5) + 's';
-            bubble.style.animationDelay = Math.random() * 5 + 's';
             container.appendChild(bubble);
         }
 
