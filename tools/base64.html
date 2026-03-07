@@ -6,65 +6,70 @@
     <title>Base64 Professional Tool</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root { --primary: #00d2ff; --bg: #0f0c29; }
-        * { box-sizing: border-box; font-family: 'Poppins', sans-serif; transition: 0.3s ease; }
+        :root { --primary: #00d2ff; --bg: #0f0c29; --glass: rgba(255, 255, 255, 0.05); }
+        * { box-sizing: border-box; font-family: 'Poppins', sans-serif; transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
         
         body { background: var(--bg); color: white; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 20px; }
         
         .container { 
-            background: #1a1a3a; padding: 25px; border-radius: 20px; 
+            background: rgba(26, 26, 58, 0.8); padding: 30px; border-radius: 25px; 
             border: 1px solid rgba(255,255,255,0.1); width: 100%; max-width: 400px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5); backdrop-filter: blur(15px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.6); backdrop-filter: blur(20px);
             text-align: center; position: relative;
         }
         
-        .back-btn { position: absolute; top: 20px; left: 20px; cursor: pointer; color: var(--primary); font-size: 20px; }
-        h3 { margin-top: 5px; margin-bottom: 15px; font-size: 18px; }
+        .back-btn { position: absolute; top: 25px; left: 25px; cursor: pointer; color: var(--primary); font-size: 22px; }
+        .back-btn:hover { transform: translateX(-5px); color: white; }
         
-        textarea { width: 100%; height: 80px; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; color: white; padding: 12px; margin: 8px 0; outline: none; resize: none; }
+        h3 { margin: 0 0 20px 0; letter-spacing: 1px; color: var(--primary); }
         
-        .btn-group { display: flex; gap: 8px; margin: 10px 0; }
-        .action-btn { flex: 1; padding: 12px; border-radius: 10px; border: none; background: var(--primary); color: #000; font-weight: bold; cursor: pointer; }
-        .copy-btn { width: 100%; padding: 12px; border-radius: 10px; border: none; background: rgba(255,255,255,0.1); color: white; font-weight: bold; cursor: pointer; }
+        textarea { 
+            width: 100%; height: 100px; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); 
+            border-radius: 15px; color: white; padding: 15px; margin: 10px 0; outline: none; resize: none; font-size: 14px;
+        }
+        textarea:focus { border-color: var(--primary); box-shadow: 0 0 10px rgba(0, 210, 255, 0.2); }
         
-        .action-btn:active, .copy-btn:active { transform: translateY(-5px) scale(0.97); box-shadow: 0 8px 15px rgba(0, 210, 255, 0.3); }
+        .btn-group { display: flex; gap: 10px; margin: 15px 0; }
+        .action-btn { flex: 1; padding: 14px; border-radius: 12px; border: none; background: linear-gradient(45deg, #00d2ff, #3a7bd5); color: white; font-weight: bold; cursor: pointer; }
+        .copy-btn { width: 100%; padding: 14px; border-radius: 12px; border: 1px solid var(--primary); background: transparent; color: var(--primary); font-weight: bold; cursor: pointer; margin-top: 5px; }
+        
+        .action-btn:active { transform: scale(0.95); }
+        .copy-btn:hover { background: var(--primary); color: #000; }
 
-        /* পপ-আপ স্টাইল */
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); backdrop-filter: blur(5px); justify-content: center; align-items: center; z-index: 100; }
-        .modal-content { background: #1a1a3a; padding: 25px; border-radius: 20px; text-align: center; border: 1px solid var(--primary); max-width: 280px; }
-        .modal button { margin-top: 20px; background: var(--primary); color: #000; padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; }
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); backdrop-filter: blur(5px); justify-content: center; align-items: center; z-index: 100; }
+        .modal-content { background: #1a1a3a; padding: 30px; border-radius: 20px; text-align: center; border: 1px solid var(--primary); width: 280px; }
+        .modal button { margin-top: 20px; background: var(--primary); color: #000; padding: 10px 25px; border: none; border-radius: 10px; cursor: pointer; font-weight: bold; }
     </style>
 </head>
 <body>
 
     <div class="container">
         <i class="fas fa-arrow-left back-btn" onclick="window.parent.postMessage('closeTools', '*')"></i>
-        <h3>Base64 Tool</h3>
+        <h3>Base64</h3>
         
-        <textarea id="input" placeholder="এখানে টেক্সট বা Base64 লিখুন..."></textarea>
+        <textarea id="input" placeholder="Enter text here..."></textarea>
         
         <div class="btn-group">
             <button class="action-btn" onclick="process(true)">ENCODE</button>
             <button class="action-btn" onclick="process(false)">DECODE</button>
         </div>
 
-        <textarea id="output" placeholder="ফলাফল এখানে আসবে..." readonly></textarea>
+        <textarea id="output" placeholder="Result will appear here..." readonly></textarea>
         <button class="copy-btn" onclick="copyResult()">COPY RESULT</button>
     </div>
 
     <div id="modal" class="modal">
         <div class="modal-content">
-            <i id="modalIcon" class="fas" style="font-size: 35px;"></i>
-            <p id="modalMsg" style="margin: 20px 0; font-size: 14px;"></p>
+            <i id="modalIcon" class="fas" style="font-size: 40px; margin-bottom: 10px;"></i>
+            <p id="modalMsg" style="font-size: 15px;"></p>
             <button onclick="closeModal()">OK</button>
         </div>
     </div>
 
     <script>
-        // প্রসেস ফাংশন
         function process(isEncode) {
             const input = document.getElementById('input').value;
-            if(!input) return showModal("fa-times-circle", "#ff0050", "অনুগ্রহ করে কিছু টেক্সট লিখুন!");
+            if(!input) return showModal("fa-exclamation-circle", "#ff0050", "Please enter some text first!");
             
             try {
                 if(isEncode) {
@@ -73,23 +78,19 @@
                     document.getElementById('output').value = decodeURIComponent(escape(atob(input)));
                 }
             } catch(e) {
-                showModal("fa-times-circle", "#ff0050", "ভুল ইনপুট! সঠিক ফরম্যাট চেক করুন।");
+                showModal("fa-times-circle", "#ff0050", "Invalid format! Check your data.");
             }
         }
 
-        // কপি ফাংশন
         function copyResult() {
             const out = document.getElementById('output');
-            if(!out.value) return showModal("fa-times-circle", "#ff0050", "কপি করার কিছু নেই!");
+            if(!out.value) return showModal("fa-exclamation-circle", "#ff0050", "Nothing to copy!");
             
             out.select();
             document.execCommand('copy');
-            
-            // সাকসেস পপ-আপ
-            showModal("fa-check-circle", "#00d2ff", "সফলভাবে কপি হয়েছে!");
+            showModal("fa-check-circle", "#00d2ff", "Copied to clipboard!");
         }
 
-        // পপ-আপ দেখানোর ফাংশন
         function showModal(icon, color, msg) {
             document.getElementById('modalIcon').className = "fas " + icon;
             document.getElementById('modalIcon').style.color = color;
@@ -97,9 +98,7 @@
             document.getElementById('modal').style.display = 'flex';
         }
 
-        function closeModal() {
-            document.getElementById('modal').style.display = 'none';
-        }
+        function closeModal() { document.getElementById('modal').style.display = 'none'; }
     </script>
 </body>
 </html>
