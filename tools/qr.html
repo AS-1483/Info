@@ -93,7 +93,7 @@
                 ctx.fillText("©️ AS QR Generator", 280, 1100);
                 
                 const link = document.createElement('a');
-                link.download = `AS_QR_HD_${Date.now()}.png`;
+                link.download = `AS_QR_Generator_${Date.now()}.png`;
                 link.href = fullCanvas.toDataURL("image/png", 1.0);
                 link.click();
             }, 500);
